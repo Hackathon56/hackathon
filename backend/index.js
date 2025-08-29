@@ -1,38 +1,38 @@
-const express = require('express');
-const OpenAI = require('openai');
+import express from "express";
+import multer from "multer";
+import fs from "fs";
+import dotenv from "dotenv";
+import axios from "axios";
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
+const upload = multer({ dest: "uploads/" });
 
+const API_KEY = process.env.API_KEY || "";
+const Voice_Api = "c8790c6338b9402a95a787af78f65193";
 
-const deepseek = new OpenAI({
-  apiKey: process.env.API_KEY||'',
-  baseURL: "https://api.deepseek.com"
-});
-
-// Middleware to parse JSON bodies
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
+app.get("/", (req, res) => {
+  res.send("Hello, world!");
 });
-
 
 app.post("/api/generate-minutes", async (req, res) => {
   try {
     const { transcript } = req.body;
     if (!transcript) {
-      return res.status(400).json({ error: "Transcript text is required" });
+      return res.status(400).json({ error: "Transcript is required" });
     }
 
-    const systemMsg = `
-You are an expert meeting minutes extractor.
+    const prompt = `
+You are an AI Meeting Minutes Generator.
 Extract from the transcript:
 1. Key Discussion Points
-2. Decisions Made (with speaker)
-3. Action Items (with assignee and deadline)
+2. Decisions Made (with actors)
+3. Action Items (with assignees and deadlines)
 
-Output ONLY valid JSON in this schema:
+Return valid JSON only with this structure:
 {
   "title": "string",
   "date": "YYYY-MM-DD",
@@ -42,31 +42,112 @@ Output ONLY valid JSON in this schema:
   "decisions": [{"actor":"...","decision":"..."}],
   "action_items":[{"actor":"...","task":"...","deadline":"string|null"}]
 }
-    `.trim();
 
-    const response = await deepseek.chat.completions.create({
-      model: "deepseek-reasoner", // or 'deepseek-chat'
-      messages: [
-        { role: "system", content: systemMsg },
-        { role: "user", content: transcript }
-      ],
-      temperature: 0.2
-    });
+please note im using json parser so please ensure the output is valid JSON.
 
-    const content = response.choices[0].message.content.trim();
+Transcript:
+${transcript}
+`;
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+        API_KEY,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    let aiContent =
+      data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+
+    aiContent = aiContent.replace(/```json|```/g, "").trim();
     let minutes;
     try {
-      minutes = JSON.parse(content);
+      minutes = JSON.parse(aiContent);
     } catch (err) {
-      return res.status(500).json({ error: "Invalid JSON from AI", raw: content });
+      return res
+        .status(500)
+        .json({ error: "Invalid JSON from Gemini", raw: aiContent });
     }
-    res.json(minutes);
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "DeepSeek call failed", details: String(error) });
+    res.json(minutes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to generate minutes" });
   }
 });
+
+async function uploadAudio(filePath) {
+  const data = fs.readFileSync(filePath);
+  const response = await axios.post(
+    "https://api.assemblyai.com/v2/upload",
+    data,
+    {
+      headers: {
+        authorization: Voice_Api,
+        "content-type": "application/octet-stream",
+      },
+    }
+  );
+  return response.data.upload_url;
+}
+
+async function transcribeAudio(audioUrl) {
+  const response = await axios.post(
+    "https://api.assemblyai.com/v2/transcript",
+    { audio_url: audioUrl },
+    {
+      headers: { authorization: Voice_Api },
+    }
+  );
+  return response.data;
+}
+
+// Step 3: Poll for result
+async function getTranscript(id) {
+  while (true) {
+    const res = await axios.get(
+      `https://api.assemblyai.com/v2/transcript/${id}`,
+      { headers: { authorization: Voice_Api } }
+    );
+    if (res.data.status === "completed") {
+      return res.data.text;
+    } else if (res.data.status === "error") {
+      throw new Error(res.data.error);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+}
+
+// Route: POST /transcribe (send audio file)
+app.post("/transcribe", upload.single("audio"), async (req, res) => {
+  try {
+    const filePath = req.file.path;
+    console.log("File path:", filePath);
+    const audioUrl = await uploadAudio(filePath);
+    console.log("Audio URL:", audioUrl);
+    const job = await transcribeAudio(audioUrl);
+    console.log("Transcription job:", job);
+    const text = await getTranscript(job.id);
+    console.log("Transcript:", text);
+    res.json({ transcript: text });
+    fs.unlinkSync(filePath); // cleanup
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
