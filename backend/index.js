@@ -132,7 +132,7 @@ async function getTranscript(id) {
   }
 }
 
-app.post("/transcribe", upload.single("audio"), async (req, res) => {
+app.post("/api/transcribe", upload.single("audio"), async (req, res) => {
   try {
     const filePath = req.file.path;
     const audioUrl = await uploadAudio(filePath);

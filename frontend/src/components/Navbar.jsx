@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import { Home } from "../page/Home";
 import "./Navbar.css";
@@ -10,7 +10,7 @@ function Navbar() {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-transparent">
         <div className="container py-2">
-          <a className="navbar-brand d-flex align-items-center" href="/">
+          <Link className="navbar-brand d-flex align-items-center" to="/">
             <img
               src={logo}
               alt="logo"
@@ -18,7 +18,7 @@ function Navbar() {
               style={{ height: "60px" }}
             />
             <span className="text-white fw-bold fs-4">Meeting Minutes</span>
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -44,26 +44,26 @@ function Navbar() {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="/Memory">
+                    <Link className="dropdown-item" to="/Memory">
                       Audio to summary
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <Link className="dropdown-item" to="#">
                       Video to summary
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/Sum">
+                    <Link className="dropdown-item" to="/Sum">
                       PDF to summary
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white fs-5" href="/About">
+                <Link className="nav-link text-white fs-5" to="/About">
                   About
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link text-white fs-5" href="#">
