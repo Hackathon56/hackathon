@@ -1,19 +1,20 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import logo from "../assets/logo.jpg";
+import { Home } from "../page/Home";
 function Navbar() {
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-transparent">
         <div className="container py-2">
-          <a className="navbar-brand d-flex align-items-center" href="#">
+          <a className="navbar-brand d-flex align-items-center" href="/">
             <img
               src={logo}
               alt="logo"
               className="rounded-circle me-3 ms-4"
-              style={{ height: "60px" }} // Keeping inline style for specific image height
+              style={{ height: "60px" }}
             />
-            <span className="text-white fw-bold fs-4">Meeting Minutes</span>{" "}
+            <span className="text-white fw-bold fs-4">Meeting Minutes</span>
           </a>
           <button
             className="navbar-toggler"
