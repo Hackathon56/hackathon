@@ -2,6 +2,9 @@ import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import { Home } from "../page/Home";
+import "./Navbar.css";
+import Memory from "../page/Memory";
+
 function Navbar() {
   return (
     <>
@@ -11,7 +14,7 @@ function Navbar() {
             <img
               src={logo}
               alt="logo"
-              className="rounded-circle me-3 ms-4"
+              className="rounded-circle me-3"
               style={{ height: "60px" }}
             />
             <span className="text-white fw-bold fs-4">Meeting Minutes</span>
@@ -29,7 +32,7 @@ function Navbar() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-              <li className="nav-item dropdown me-4">
+              <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle text-white fs-5"
                   href="#"
@@ -41,7 +44,7 @@ function Navbar() {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/Memory">
                       Audio to summary
                     </a>
                   </li>
@@ -57,22 +60,16 @@ function Navbar() {
                   </li>
                 </ul>
               </li>
-              {/* About Link */}
-              <li className="nav-item me-4">
-                <a
-                  className="nav-link text-white fs-5" // CSS hover will be handled by .nav-link:hover
-                  href="/About"
-                >
+              <li className="nav-item">
+                <a className="nav-link text-white fs-5" href="/About">
                   About
                 </a>
               </li>
-              {/* Contact Link */}
-              <li className="nav-item me-4">
+              <li className="nav-item">
                 <a className="nav-link text-white fs-5" href="#">
                   Contact
                 </a>
               </li>
-              {/* Sign Up Button Link */}
               <li className="nav-item">
                 <a className="btn btn-white bg-col text-white fs-5" href="#">
                   Sign Up
