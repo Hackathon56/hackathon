@@ -1,0 +1,81 @@
+/* Container for the main hero section */
+.container-hero {
+  display: block;
+  text-align: center;
+  margin-top: 90px;
+}
+
+/* Styles for the main heading */
+.hero-heading {
+  font-size: 70px;
+}
+
+/* Styles for the subheading */
+.hero-subheading {
+  font-size: 16px;
+  color: #555; /* A subtle color for the text */
+}
+
+/* Styles for the main button */
+.btn-hero {
+  width: 150px;
+  font-size: 25px;
+  border-radius: 60px;
+  border: 2px solid white; /* A proper border definition */
+  font-weight: bold;
+  background-color: transparent;
+  color: white;
+  transition: all 0.3s ease; /* Adds a smooth hover transition */
+}
+
+.btn-hero:hover {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+/* Flexbox container for the images */
+.image-gallery {
+  display: flex;
+  justify-content: center; /* Horizontally center the images */
+  align-items: center; /* Vertically align the images */
+  margin-top: 50px;
+  overflow: hidden; /* Hides images that move out of the container */
+}
+
+/* Base style for all images */
+.image-item {
+  width: 300px;
+  height: auto;
+  margin: 10px; /* Space between images */
+  transition: transform 0.5s ease-in-out; /* Smooth scale transition */
+  object-fit: contain; /* Ensures the image fits without distortion */
+}
+
+/* Make the center image bigger */
+.center-image {
+  transform: scale(1.2); /* Make it 20% bigger than the others */
+  z-index: 10; /* Bring the center image to the front */
+}
+/* Styles for the dropdown menu */
+.dropdown-menu {
+  background-color: rgba(0, 0, 0, 0.7); /* Transparent black background */
+  border: none; /* Remove the border for a cleaner look */
+}
+
+/* Styles for dropdown menu items */
+.dropdown-menu .dropdown-item {
+  color: white; /* Make text color white for readability on a dark background */
+  transition: background-color 0.3s ease; /* Add transition for hover effect */
+}
+
+/* Hover effect for dropdown items */
+.dropdown-menu .dropdown-item:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Semi-transparent white on hover */
+  color: white; /* Keep text color white on hover */
+}

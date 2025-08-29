@@ -1,0 +1,67 @@
+/* Base styles for all navigation links */
+.navbar-nav .nav-link {
+  transition: transform 0.2s ease-out, color 0.2s ease-out; /* Smooth transitions for hover effects */
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  text-decoration: none; /* Removes default link underline */
+}
+
+/* Hover styles for general navigation links */
+.navbar-nav .nav-link:hover {
+  transform: scale(1.08); /* Makes the link slightly bigger on hover */
+  color: #a8dadc; /* Changes color on hover */
+}
+
+/* Base styles for the Sign Up button-like link */
+.navbar-nav .signup-button {
+  /* Inherits base link styles implicitly or explicitly */
+  transition: transform 0.2s ease-out, background-color 0.2s ease-out,
+    color 0.2s ease-out, border-color 0.2s ease-out;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: bold;
+  margin-left: 10px; /* Specific margin from the preceding link */
+}
+
+/* Hover styles for the Sign Up button-like link */
+.navbar-nav .signup-button:hover {
+  transform: scale(1.08);
+  background-color: white;
+  color: #3a1c71; /* Darker text on white background */
+  border-color: #3a1c71; /* Darker border on hover */
+}
+
+/* Styles for the dropdown menu container */
+.navbar-nav .dropdown-menu {
+  background-color: rgba(0, 0, 0, 0.7); /* Transparent black background */
+  border: 1px solid white; /* Added white border */
+  /* Ensures dropdown items appear above other content */
+  z-index: 1000;
+}
+
+/* Styles for individual dropdown menu items */
+.navbar-nav .dropdown-item {
+  color: white;
+  background-color: transparent; /* Ensures text is visible on dark transparent background */
+  transition: background-color 0.3s ease; /* Smooth hover effect for items */
+}
+
+/* Hover effect for dropdown menu items */
+.navbar-nav .dropdown-item:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Semi-transparent white on hover */
+  color: white; /* Keeps text color white */
+}
+
+/* General Navbar background gradient - consider moving this to a higher-level App.css if it's for the whole page */
