@@ -1,6 +1,56 @@
 import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../constants";
+import MeetingEditor from "../components/MeetingEditor";
+import html2pdf from "html2pdf.js";
+
+function minutesToHtml(data) {
+  if (!data) return "<p>No data</p>";
+
+  return `
+    <h1>${data.title}</h1>
+    <p><em>${data.date}</em></p>
+
+    <h3>Participants</h3>
+    <ul>
+      ${data.participants.map((p) => `<li>${p}</li>`).join("")}
+    </ul>
+
+    <h3>Agenda</h3>
+    <p>${data.agenda}</p>
+
+    <h3>Discussion Points</h3>
+    <ul>
+      ${data.discussion_points.map((d) => `<li>${d}</li>`).join("")}
+    </ul>
+
+    <h3>Decisions</h3>
+    <ul>
+      ${data.decisions
+        .map((d) => `<li><strong>${d.actor}:</strong> ${d.decision}</li>`)
+        .join("")}
+    </ul>
+
+    <h3>Action Items</h3>
+    <ul>
+      ${data.action_items
+        .map(
+          (a) =>
+            `<li><strong>${a.actor}:</strong> ${a.task} ${
+              a.deadline ? `<em>(Deadline: ${a.deadline})</em>` : ""
+            }</li>`
+        )
+        .join("")}
+    </ul>
+
+    <h3>Favorability</h3>
+    <ul>
+      ${data.favorability
+        .map((f) => `<li><strong>${f.actor}:</strong> ${f.stance}</li>`)
+        .join("")}
+    </ul>
+  `;
+}
 
 function Sum() {
   const [prompt, setPrompt] = useState("");
@@ -13,12 +63,29 @@ function Sum() {
       const response = await axios.post(`${API_URL}api/generate-minutes`, {
         transcript: prompt,
       });
-      setResult(response.data);
+      setResult(minutesToHtml(response.data));
     } catch (error) {
       console.error("Error generating minutes:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const exportPDF = () => {
+    if (!data) return;
+
+    const element = document.createElement("div");
+    element.innerHTML = data;
+
+    const options = {
+      margin: 10,
+      filename: "meeting_minutes.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf().set(options).from(element).save();
   };
 
   return (
@@ -81,83 +148,11 @@ function Sum() {
             }}
           >
             {data ? (
-              <div className="container my-4">
-                <div className="card bg-transparent border-0 ">
-                  <div className="card-body">
-                    <h1 className="card-title h3 mb-2">{data.title}</h1>
-                    <h6 className="card-subtitle mb-3 text-muted">
-                      {data.date}
-                    </h6>
-
-                    <h5>Participants</h5>
-                    <ul className="list-group list-group-flush  mb-3">
-                      {data.participants.map((p, idx) => (
-                        <li
-                          key={idx}
-                          className="list-group-item bg-transparent"
-                        >
-                          * {p}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <h5>Agenda</h5>
-                    <p className="mb-3">{data.agenda}</p>
-
-                    <h5>Discussion Points</h5>
-                    <ul className="list-group list-group-flush mb-3">
-                      {data.discussion_points.map((point, idx) => (
-                        <li
-                          key={idx}
-                          className="list-group-item bg-transparent"
-                        >
-                          * {point}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <h5>Decisions</h5>
-                    <ul className="list-group list-group-flush mb-3">
-                      {data.decisions.map((d, idx) => (
-                        <li
-                          key={idx}
-                          className="list-group-item bg-transparent"
-                        >
-                          * <strong>{d.actor}:</strong> {d.decision}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <h5>Action Items</h5>
-                    <ul className="list-group list-group-flush">
-                      {data.action_items.map((a, idx) => (
-                        <li
-                          key={idx}
-                          className="list-group-item bg-transparent"
-                        >
-                          * <strong>{a.actor}:</strong> {a.task}{" "}
-                          {a.deadline && (
-                            <em className="text-muted">
-                              (Deadline: {a.deadline})
-                            </em>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <h5>Favorability</h5>
-                    <ul className="list-group list-group-flush">
-                      {data.favorability.map((f, idx) => (
-                        <li
-                          key={idx}
-                          className="list-group-item bg-transparent"
-                        >
-                          * <strong>{f.actor}:</strong> {f.stance}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+              <div className="d-flex flex-column gap-2">
+                <MeetingEditor initialContent={data} onChange={setResult} />
+                <button onClick={exportPDF} className="btn btn-danger">
+                  Export as PDF
+                </button>
               </div>
             ) : (
               <div className="text-secondary">
