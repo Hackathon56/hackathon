@@ -3,6 +3,7 @@ import multer from "multer";
 import fs from "fs";
 import dotenv from "dotenv";
 import axios from "axios";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -11,7 +12,7 @@ const upload = multer({ dest: "uploads/" });
 
 const API_KEY = process.env.API_KEY || "";
 const Voice_Api = "c8790c6338b9402a95a787af78f65193";
-
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -31,6 +32,7 @@ Extract from the transcript:
 1. Key Discussion Points
 2. Decisions Made (with actors)
 3. Action Items (with assignees and deadlines)
+4. Overall Favorability of Each Participant (whether they agreed more or denied more)
 
 Return valid JSON only with this structure:
 {
@@ -40,7 +42,8 @@ Return valid JSON only with this structure:
   "agenda": "string",
   "discussion_points": ["..."],
   "decisions": [{"actor":"...","decision":"..."}],
-  "action_items":[{"actor":"...","task":"...","deadline":"string|null"}]
+  "action_items":[{"actor":"...","task":"...","deadline":"string|null"}],
+  "favorability":[{"actor":"...","stance":"agree|deny|neutral"}]
 }
 
 please note im using json parser so please ensure the output is valid JSON.
@@ -114,7 +117,6 @@ async function transcribeAudio(audioUrl) {
   return response.data;
 }
 
-// Step 3: Poll for result
 async function getTranscript(id) {
   while (true) {
     const res = await axios.get(
@@ -130,19 +132,14 @@ async function getTranscript(id) {
   }
 }
 
-// Route: POST /transcribe (send audio file)
 app.post("/transcribe", upload.single("audio"), async (req, res) => {
   try {
     const filePath = req.file.path;
-    console.log("File path:", filePath);
     const audioUrl = await uploadAudio(filePath);
-    console.log("Audio URL:", audioUrl);
     const job = await transcribeAudio(audioUrl);
-    console.log("Transcription job:", job);
     const text = await getTranscript(job.id);
-    console.log("Transcript:", text);
     res.json({ transcript: text });
-    fs.unlinkSync(filePath); // cleanup
+    fs.unlinkSync(filePath);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
