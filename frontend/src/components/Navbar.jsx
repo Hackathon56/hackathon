@@ -1,9 +1,10 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import { Home } from "../page/Home";
 import "./Navbar.css";
 import Memory from "../page/Memory";
+import Support from "../page/Support";
 
 function Navbar() {
   return (
@@ -66,9 +67,9 @@ function Navbar() {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white fs-5" href="#">
-                  Contact
-                </a>
+                <Link className="nav-link text-white fs-5" to="/Support">
+                  Support
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="btn btn-white bg-col text-white fs-5" href="#">

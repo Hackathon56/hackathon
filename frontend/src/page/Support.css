@@ -1,0 +1,87 @@
+body {
+  background: linear-gradient(135deg, #eef2f3, #dfe9f3);
+  font-family: Arial, sans-serif;
+}
+
+.feedback-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  margin: 0 auto 20px auto; /* no space on top, 20px below */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.container.py-5 {
+  padding: 0 !important; /* remove Bootstrap's extra padding */
+}
+
+.feedback-card {
+  margin: 20px auto; /* equal spacing for all */
+}
+.feedback-card:first-child {
+  margin-top: 20px; /* only first card gets top spacing */
+}
+
+.feedback-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* Emoji options */
+.emoji-option {
+  font-size: 2.2rem;
+  cursor: pointer;
+  margin: 0 12px;
+  transition: transform 0.2s;
+}
+.emoji-option:hover {
+  transform: scale(1.3);
+}
+
+/* Buttons for reasons */
+.reason-btn {
+  margin: 8px;
+  border-radius: 25px;
+  padding: 8px 16px;
+  transition: all 0.2s;
+}
+.reason-btn:hover {
+  background: #0d6efd;
+  color: #fff;
+}
+
+/* Textarea */
+textarea {
+  border-radius: 12px !important;
+  padding: 14px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Submit button */
+.btn-submit {
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-weight: 600;
+}
+
+/* Arrow between cards */
+.arrow-down {
+  text-align: center;
+  font-size: 2rem;
+  color: #0d6efd;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}

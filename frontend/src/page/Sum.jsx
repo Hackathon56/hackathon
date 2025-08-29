@@ -24,7 +24,7 @@ function Sum() {
   return (
     <>
       <div style={{ display: "block", textAlign: "center", padding: "20px" }}>
-        <h1>Summarise your text here</h1>
+        <h1 style={{ color: "white" }}>Summarise your text here</h1>
         <div
           className="con"
           style={{
@@ -64,7 +64,7 @@ function Sum() {
           </button>
         </div>
         <div className="d-flex flex-column justify-content-center align-items-center mt-5">
-          <h3>Result</h3>
+          <h3 style={{ color: "white" }}>Result</h3>
           <div
             style={{
               width: "60%",
@@ -77,6 +77,7 @@ function Sum() {
               padding: "15px",
               fontSize: "16px",
               textAlign: "start",
+              color: "white",
             }}
           >
             {data ? (
@@ -159,7 +160,9 @@ function Sum() {
                 </div>
               </div>
             ) : (
-              "Your result will be reflected here."
+              <div className="text-secondary">
+                Your result will be reflected here.
+              </div>
             )}
           </div>
         </div>
