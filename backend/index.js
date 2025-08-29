@@ -1,9 +1,8 @@
 import express from "express";
-import { pipeline, read_audio } from "@xenova/transformers";
 import multer from "multer";
 import fs from "fs";
 import dotenv from "dotenv";
-import decodeAudio from "audio-decode";
+import axios from "axios";
 dotenv.config();
 
 const app = express();
@@ -11,6 +10,7 @@ const PORT = 3000;
 const upload = multer({ dest: "uploads/" });
 
 const API_KEY = process.env.API_KEY || "";
+const Voice_Api = "c8790c6338b9402a95a787af78f65193";
 
 app.use(express.json());
 
@@ -88,47 +88,64 @@ ${transcript}
   }
 });
 
-let transcriber;
-
-async function loadModel() {
-  if (!transcriber) {
-    console.log("Loading Whisper model... this may take a minute.");
-    transcriber = await pipeline(
-      "automatic-speech-recognition",
-      "Xenova/whisper-small"
-    );
-  }
-  return transcriber;
+async function uploadAudio(filePath) {
+  const data = fs.readFileSync(filePath);
+  const response = await axios.post(
+    "https://api.assemblyai.com/v2/upload",
+    data,
+    {
+      headers: {
+        authorization: Voice_Api,
+        "content-type": "application/octet-stream",
+      },
+    }
+  );
+  return response.data.upload_url;
 }
 
-app.post("/api/audio2text", upload.single("audio"), async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+async function transcribeAudio(audioUrl) {
+  const response = await axios.post(
+    "https://api.assemblyai.com/v2/transcript",
+    { audio_url: audioUrl },
+    {
+      headers: { authorization: Voice_Api },
+    }
+  );
+  return response.data;
+}
 
-  try {
-    const model = await loadModel();
-
-    const filePath = req.file.path;
-
-    const Buffer = fs.readFileSync(filePath);
-
-    const audioBuffer = await decodeAudio(Buffer);
-
-    const float32Array = audioBuffer.getChannelData(0);
-
-    const result = await model(float32Array);
-
-    // Clean up temp file
-    fs.unlinkSync(filePath);
-
-    res.json({ text: result.text });
-  } catch (err) {
-    console.error("Transcription error:", err);
-    res.status(500).json({ error: "Failed to transcribe audio" });
+// Step 3: Poll for result
+async function getTranscript(id) {
+  while (true) {
+    const res = await axios.get(
+      `https://api.assemblyai.com/v2/transcript/${id}`,
+      { headers: { authorization: Voice_Api } }
+    );
+    if (res.data.status === "completed") {
+      return res.data.text;
+    } else if (res.data.status === "error") {
+      throw new Error(res.data.error);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 5000));
   }
-});
+}
 
-app.get("/", (req, res) => {
-  res.send("Server is up and running");
+// Route: POST /transcribe (send audio file)
+app.post("/transcribe", upload.single("audio"), async (req, res) => {
+  try {
+    const filePath = req.file.path;
+    console.log("File path:", filePath);
+    const audioUrl = await uploadAudio(filePath);
+    console.log("Audio URL:", audioUrl);
+    const job = await transcribeAudio(audioUrl);
+    console.log("Transcription job:", job);
+    const text = await getTranscript(job.id);
+    console.log("Transcript:", text);
+    res.json({ transcript: text });
+    fs.unlinkSync(filePath); // cleanup
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.listen(PORT, () => {
