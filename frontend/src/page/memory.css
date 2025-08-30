@@ -8,7 +8,7 @@ body {
 h1 {
   font-size: 2.5rem;
   font-weight: bold;
-  text-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+  /* text-shadow: 0 0 10px rgba(0, 123, 255, 0.8); */
 }
 
 .card {

@@ -56,7 +56,7 @@ function Navbar() {
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/Sum">
-                      PDF to summary
+                      Text to summary
                     </Link>
                   </li>
                 </ul>
@@ -70,11 +70,6 @@ function Navbar() {
                 <Link className="nav-link text-white fs-5 btn" to="/Support">
                   Support
                 </Link>
-              </li>
-              <li className="nav-item">
-                <a className="btn btn-white bg-col text-white fs-5" href="#">
-                  Sign Up
-                </a>
               </li>
             </ul>
           </div>

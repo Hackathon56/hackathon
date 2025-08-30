@@ -3,54 +3,7 @@ import axios from "axios";
 import { API_URL } from "../../constants";
 import MeetingEditor from "../components/MeetingEditor";
 import html2pdf from "html2pdf.js";
-
-function minutesToHtml(data) {
-  if (!data) return "<p>No data</p>";
-
-  return `
-    <h1>${data.title}</h1>
-    <p><em>${data.date}</em></p>
-
-    <h3>Participants</h3>
-    <ul>
-      ${data.participants.map((p) => `<li>${p}</li>`).join("")}
-    </ul>
-
-    <h3>Agenda</h3>
-    <p>${data.agenda}</p>
-
-    <h3>Discussion Points</h3>
-    <ul>
-      ${data.discussion_points.map((d) => `<li>${d}</li>`).join("")}
-    </ul>
-
-    <h3>Decisions</h3>
-    <ul>
-      ${data.decisions
-        .map((d) => `<li><strong>${d.actor}:</strong> ${d.decision}</li>`)
-        .join("")}
-    </ul>
-
-    <h3>Action Items</h3>
-    <ul>
-      ${data.action_items
-        .map(
-          (a) =>
-            `<li><strong>${a.actor}:</strong> ${a.task} ${
-              a.deadline ? `<em>(Deadline: ${a.deadline})</em>` : ""
-            }</li>`
-        )
-        .join("")}
-    </ul>
-
-    <h3>Favorability</h3>
-    <ul>
-      ${data.favorability
-        .map((f) => `<li><strong>${f.actor}:</strong> ${f.stance}</li>`)
-        .join("")}
-    </ul>
-  `;
-}
+import { minutesToHtml } from "../components/text2html";
 
 function Sum() {
   const [prompt, setPrompt] = useState("");
@@ -76,6 +29,12 @@ function Sum() {
 
     const element = document.createElement("div");
     element.innerHTML = data;
+    element.style.color = "black"; // force text black
+    element.style.background = "white"; // white background
+    element.style.width = "100%";
+    element.style.fontFamily = "Arial, sans-serif";
+    element.style.fontSize = "12pt";
+    element.style.padding = "10px";
 
     const options = {
       margin: 10,
@@ -138,24 +97,24 @@ function Sum() {
               minHeight: "300px",
               borderRadius: "20px",
               border: "1px solid rgba(255, 255, 255, 0.3)",
-              background: "rgba(255, 255, 255, 0.1)",
+              background: "rgba(255, 255, 255, 1)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
               padding: "15px",
               fontSize: "16px",
               textAlign: "start",
-              color: "white",
+              color: "black",
             }}
           >
             {data ? (
-              <div className="d-flex flex-column gap-2">
+              <div className="d-flex flex-column gap-2 text-black">
                 <MeetingEditor initialContent={data} onChange={setResult} />
-                <button onClick={exportPDF} className="btn btn-danger">
+                <button onClick={exportPDF} className="btn btn-danger w-fit">
                   Export as PDF
                 </button>
               </div>
             ) : (
-              <div className="text-secondary">
+              <div className="text-black">
                 Your result will be reflected here.
               </div>
             )}

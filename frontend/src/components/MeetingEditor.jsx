@@ -18,5 +18,5 @@ export default function MeetingEditor({ initialContent, onChange }) {
     }
   }, [initialContent, editor]);
 
-  return <EditorContent editor={editor} className="p-4" />;
+  return <EditorContent editor={editor} className="p-4 text-black" />;
 }
