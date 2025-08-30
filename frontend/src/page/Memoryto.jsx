@@ -1,8 +1,7 @@
 import React from "react";
-import "./memory.css";
 import { API_URL } from "../../constants";
 
-function Memory() {
+function Memoryto() {
   const [audioFile, setAudioFile] = React.useState(null);
   const [transcribedText, setTranscribedText] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -42,19 +41,21 @@ function Memory() {
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-lg-8">
-          <h1 className="text-white text-center mb-4">Audio to Text</h1>
+          <h1 className="text-white text-center mb-4">Video to Text</h1>
           <div className="shadow-lg p-4 bg-white rounded-4">
-            <h5 className="mb-3 text-black text-center">Upload the Audio</h5>
+            <h5 className="mb-3 text-black text-center">Upload the Video</h5>
             <form onSubmit={handleSubmit} onReset={handleClear}>
               <div className="upload-area text-center border border-2 border-dashed rounded-3 p-4 mb-3">
                 <input
                   type="file"
                   name="audio"
-                  accept="audio/*"
+                  accept="video/*"
                   className="form-control"
                   onChange={handleFileChange}
                 />
-                <p className="mt-3 text-muted">Supports mp3, wav</p>
+                <p className="mt-3 text-muted">
+                  Supports mp4, mpv, webmp, avi.
+                </p>
               </div>
               <div className="d-grid gap-2 d-md-block text-center">
                 <button
@@ -90,4 +91,4 @@ function Memory() {
   );
 }
 
-export default Memory;
+export default Memoryto;

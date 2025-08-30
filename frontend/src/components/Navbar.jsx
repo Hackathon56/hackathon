@@ -50,7 +50,7 @@ function Navbar() {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="/Memoryto">
                       Video to summary
                     </Link>
                   </li>
@@ -67,7 +67,7 @@ function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link text-white fs-5" to="/Support">
+                <Link className="nav-link text-white fs-5 btn" to="/Support">
                   Support
                 </Link>
               </li>

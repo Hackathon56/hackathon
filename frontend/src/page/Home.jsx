@@ -1,6 +1,7 @@
 import React from "react";
 import imag1 from "../assets/imag1.png";
 import imag2 from "../assets/imag2.png";
+import imag3 from "../assets/imag3.png";
 import "./home.css";
 import { Footer } from "../components/Footer";
 import Sum from "./Sum";
@@ -35,7 +36,7 @@ export function Home() {
             style={{ marginRight: "10px" }}
           />
           <Link to="/Sum">
-            <img src={imag1} alt="last" id="last" />
+            <img src={imag3} alt="last" id="last" />
           </Link>
         </div>
       </div>

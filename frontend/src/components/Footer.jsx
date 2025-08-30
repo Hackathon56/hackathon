@@ -5,10 +5,12 @@ export function Footer() {
     <>
       <section className="end-section">
         <div className="end-section-inner">
-          <h2 className="end-heading">Try Transcribe today!</h2>
+          <h2 className="end-heading">
+            Powered by AI. Capturing every detail, so you don't have to.
+          </h2>
           <p className="end-description">
-            Transcribe saves you time and lets you focus on the things that
-            really matter for success.
+            AI Meeting Minutes Generator | Simplifying your meetings, one minute
+            at a time.
           </p>
           <div className="app-links">
             <a href="#" className="app-link">
@@ -48,9 +50,9 @@ export function Footer() {
                 />
               </svg>
               <span className="app-link-text">
-                Download on the
+                Premium features
                 <br />
-                App Store
+                in this model
               </span>
             </a>
             <a href="#" className="app-link">
@@ -69,9 +71,9 @@ export function Footer() {
                 />
               </svg>
               <span className="app-link-text">
-                Download on the
+                Multilanguage
                 <br />
-                Mac App Store
+                Support
               </span>
             </a>
           </div>
@@ -107,7 +109,7 @@ export function Footer() {
                 />
               </svg>
               <span className="footer-logo-text" style={{ color: "#fff" }}>
-                Transcribe
+                AI Meeting Minutes Generator
               </span>
             </div>
             <div className="footer-newsletter">

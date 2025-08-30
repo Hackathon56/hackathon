@@ -7,7 +7,9 @@ function Support() {
       <div className="1stcart"></div>
       <div className="container py-5">
         <div className="feedback-card text-center">
-          <h5>How would you rate your website experience?</h5>
+          <h5 style={{ color: "black" }}>
+            How would you rate your website experience?
+          </h5>
           <div className="d-flex justify-content-center mt-3">
             <span className="emoji-option">😞</span>
             <span className="emoji-option">😐</span>
@@ -17,7 +19,9 @@ function Support() {
         </div>
       </div>
       <div className="feedback-card">
-        <h5>We're sorry to see you go! What's your reason for leaving?</h5>
+        <h5 style={{ color: "black" }}>
+          We're sorry to see you go! What's your reason for leaving?
+        </h5>
         <div className="d-flex flex-wrap mt-3">
           <button className="btn btn-outline-primary reason-btn">
             I didn’t find what I was looking for
@@ -35,7 +39,7 @@ function Support() {
       </div>
 
       <div className="feedback-card">
-        <h5>
+        <h5 style={{ color: "black" }}>
           Please share in detail what we can improve your website experience.
         </h5>
         <textarea

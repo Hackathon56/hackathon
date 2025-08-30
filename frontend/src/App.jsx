@@ -7,6 +7,7 @@ import About from "./page/About";
 import { Footer } from "./components/Footer";
 import Memory from "./page/Memory";
 import Support from "./page/Support";
+import Memoryto from "./page/Memoryto";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/About" element={<About />} />
           <Route path="/Memory" element={<Memory />} />
           <Route path="/Support" element={<Support />} />
+          <Route path="/Memoryto" element={<Memoryto />} />
         </Routes>
         <Footer />
       </Router>
