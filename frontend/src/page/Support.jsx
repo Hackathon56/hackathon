@@ -1,4 +1,3 @@
-import React from "react";
 import "./Support.css";
 
 function Support() {

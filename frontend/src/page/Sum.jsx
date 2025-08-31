@@ -1,6 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
-import { API_URL } from "../../constants";
 import MeetingEditor from "../components/MeetingEditor";
 import html2pdf from "html2pdf.js";
 import { minutesToHtml } from "../components/text2html";
