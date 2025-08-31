@@ -4,6 +4,7 @@ import { API_URL } from "../../constants";
 import MeetingEditor from "../components/MeetingEditor";
 import html2pdf from "html2pdf.js";
 import { minutesToHtml } from "../components/text2html";
+import summarizeTranscript from "../functions/summorize";
 
 function Sum() {
   const [prompt, setPrompt] = useState("");
@@ -13,10 +14,8 @@ function Sum() {
   const GetResult = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`${API_URL}api/generate-minutes`, {
-        transcript: prompt,
-      });
-      setResult(minutesToHtml(response.data));
+      const response = await summarizeTranscript(prompt);
+      setResult(minutesToHtml(response));
     } catch (error) {
       console.error("Error generating minutes:", error);
     } finally {

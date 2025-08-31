@@ -1,6 +1,6 @@
 import React from "react";
 import "./memory.css";
-import { API_URL } from "../../constants";
+import transcribeAudio from "../functions/transcribe";
 
 function Memory() {
   const [audioFile, setAudioFile] = React.useState(null);
@@ -14,18 +14,11 @@ function Memory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!audioFile) return;
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("audio", audioFile);
 
     try {
-      console.log(formData);
-      const response = await fetch(`${API_URL}api/transcribe`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      setTranscribedText(data.transcript || "");
+      setLoading(true);
+      const response = await transcribeAudio(audioFile);
+      setTranscribedText(response || "");
     } catch (error) {
       setTranscribedText("Error transcribing audio.");
     } finally {

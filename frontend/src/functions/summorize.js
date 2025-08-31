@@ -1,29 +1,8 @@
-import express from "express";
-import multer from "multer";
-import fs from "fs";
-import dotenv from "dotenv";
-import axios from "axios";
-import cors from "cors";
-dotenv.config();
-
-const app = express();
-const PORT = 3000;
-const upload = multer({ dest: "uploads/" });
-
-const API_KEY = process.env.API_KEY || "";
-
-app.use(cors());
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
-});
-
-app.post("/api/generate-minutes", async (req, res) => {
+const API_KEY = "AIzaSyDTuUECDh-MaxjnUhqOMIeL57T_CEgRywo";
+export default async function summarizeTranscript(transcript) {
   try {
-    const { transcript } = req.body;
     if (!transcript) {
-      return res.status(400).json({ error: "Transcript is required" });
+      throw new Error("Transcript is required");
     }
 
     const prompt = `
@@ -79,31 +58,12 @@ ${transcript}
     try {
       minutes = JSON.parse(aiContent);
     } catch (err) {
-      return res
-        .status(500)
-        .json({ error: "Invalid JSON from Gemini", raw: aiContent });
+      throw new Error("Invalid JSON from Gemini");
     }
 
-    res.json(minutes);
+    return minutes;
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to generate minutes" });
+    throw new Error("Failed to generate minutes");
   }
-});
-
-app.post("/api/transcribe", upload.single("audio"), async (req, res) => {
-  try {
-    const filePath = req.file.path;
-    const audioUrl = await uploadAudio(filePath);
-    const job = await transcribeAudio(audioUrl);
-    const text = await getTranscript(job.id);
-    res.json({ transcript: text });
-    fs.unlinkSync(filePath);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+}
